@@ -12,6 +12,7 @@
 """
 
 from functools import wraps
+from common import is_prime
 import random
 
 
@@ -40,14 +41,6 @@ def _filter_primes(func):
         Выбрасывает исключение PrimeError, если именованный аргумент mod отсутствует
         или составное число.
     """
-    def is_prime(n: int) -> bool:
-        i = 2
-        flag = True
-        while i ** 2 < n:
-            if n % i == 0:
-                flag = False
-                break
-            i += 1
 
     @wraps(func)
     def filter_primes_inner(*pargs, **kwargs):
