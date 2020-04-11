@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 """Содержит класс цифровой подписи на основе протокола RSA.
 
   Пример использования:
@@ -37,10 +38,10 @@ class RsaSignature(object):
         self._d = pow(self._e, -1, phi)
 
     def update(self, msg: bytes) -> None:
-        """Обновляет сообщение и его подпись.
+        """Заменяет сообщение и его подпись.
 
         Аргументы:
-            msg: строка байт, конкатенируемая к остальной части сообщения.
+            msg: строка байт, заменяющая сообщение.
         """
         self._msg = msg
         self._hash.update(msg)
@@ -52,14 +53,15 @@ class RsaSignature(object):
         self._signature = hex(pow(digest, self._d, self._n)).encode()
 
     def get_pubkey(self) -> (int, int):
-        """Возвращает открытый ключ вида (e, n)"""
+        """Возвращает открытый ключ вида (int, int)"""
         return (self._e, self._n)
 
     def signature(self) -> (bytes, bytes):
         """Возвращает цифровую подпись
 
-        Возвращает подпись в виде tuple(bytes, bytes),
-        Первое поле - зашифрованый хэш md5 в hex-формате, второе - оригинальное сообщение.
+        Возвращает:
+            подпись в виде tuple(bytes, bytes),
+            Первое поле - зашифрованый хэш md5 в hex-формате, второе - оригинальное сообщение.
         """
         return (self._signature, self._msg)
 
@@ -69,9 +71,9 @@ class RsaSignature(object):
 
         Аргументы:
             signature: цифровая подпись вида (bytes, bytes),
-                возвращенная методом Rsa.signature().
+                возвращенная методом RsaSignature.signature().
             pubkey: открытый ключ автора цифровой подписи вида (int, int),
-                возвращенный методом Rsa.get_pubkey().
+                возвращенный методом RsaSignature.get_pubkey().
 
         Возвращает:
             True, если подпись оригинальна, иначе False.
