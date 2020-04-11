@@ -29,7 +29,7 @@ def is_prime(n: int) -> bool:
 
 
 def get_prime(a: int, b: int):
-    """Возвращает наименьшее простое число из отрезка [a, b]
+    """Возвращает наименьшее простое число из полуинтервала [a, b)
 
     Аргументы:
         a: нижняя граница отрезка
@@ -42,7 +42,7 @@ def get_prime(a: int, b: int):
 
     while not is_prime(curr):
         curr += 1
-        if curr > b:
+        if curr >= b:
             return None
 
     return curr
