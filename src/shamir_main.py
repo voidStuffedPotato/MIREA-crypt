@@ -1,6 +1,6 @@
 import sys
-from shamir_src import shamir
-from shamir_src.shamir_ui import Ui_mainWindow
+from lib import shamir
+from lib.shamir_ui import Ui_mainWindow
 from PyQt5 import QtWidgets, QtGui, QtCore
 from common import random_prime
 

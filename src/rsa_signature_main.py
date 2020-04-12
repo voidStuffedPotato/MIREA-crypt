@@ -1,8 +1,8 @@
 import sys
-from rsa_src import rsa
-from rsa_src.rsa_signature_ui import Ui_mainWindow
+from lib import rsa
+from lib.rsa_signature_ui import Ui_mainWindow
+from lib.common import random_prime
 from PyQt5 import QtWidgets, QtGui, QtCore
-from common import random_prime
 
 K = 3
 N = 5

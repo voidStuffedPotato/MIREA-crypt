@@ -1,6 +1,6 @@
 import sys
-from crc_src import crc
-from crc_src.crc_ui import Ui_mainWindow
+from lib import crc
+from lib.crc_ui import Ui_mainWindow
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 CRC_32_POLYNOMIAL = 0x04C11DB7
