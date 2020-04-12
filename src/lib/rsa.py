@@ -20,16 +20,17 @@
 
   pubkey = rsa_1.get_pubkey()
 
-  challenge_2 = rsa_client.generate_message(pubkey)
+  msg = rsa_client.generate_message(pubkey)
+  challenge_2 = rsa_client.encrypt(msg, pubkey)
 
-  response_2 = rsa_2.encrypt(challenge_2)
+  response_2 = rsa_2.decrypt(challenge_2)
 
-  original_2 = rsa_client.decrypt(response_2, pubkey) == challenge_2
-  (Flase)
+  original_2 = response_2 == msg
+  (False)
 """
 
 import hashlib
-import common
+from common import random_prime
 
 
 class RsaPlain(object):
@@ -48,33 +49,33 @@ class RsaPlain(object):
     def _generate_keys(self) -> None:
         """Генерирует закрытый и открытый ключ."""
 
-        p = common.random_prime(2 ** 16)
+        p = random_prime(2 ** 16)
         # p != q
         q = 0
         while (not q) or (p == q):
-            q = common.random_prime(2 ** 16)
+            q = random_prime(2 ** 16)
 
         self._n = p * q
         phi = (p - 1) * (q - 1)
-        self._e = common.random_prime(phi)
+        self._e = random_prime(phi)
         self._d = pow(self._e, -1, phi)
 
     def get_pubkey(self) -> (int, int):
         """Возвращает открытый ключ вида (int, int)"""
         return (self._e, self._n)
 
-    def encrypt(self, message: int):
-        """Возвращает message, зашифрованное закрытым ключом
+    def decrypt(self, cipher: int):
+        """Возвращает шифротекст, расшифрованный закрытым ключом
 
         Для проверки идентичности необходимо использовать
-        RsaPlain.decrypt().
+        message, возвращённый RsaPlain.encrypt().
         """
-        return pow(message, self._d, self._n)
+        return pow(cipher, self._d, self._n)
 
 
     @staticmethod
-    def decrypt(cipher: int, pubkey: (int, int)) -> bool:
-        """Проверяет идентичность собеседника.
+    def encrypt(message: int, pubkey: (int, int)) -> bool:
+        """Зашифровывает сообщение открытым ключом.
 
         Параметры:
             cipher: шифротекст, зашифрованный закрытым ключом.
@@ -83,12 +84,12 @@ class RsaPlain(object):
         Возвращает:
             Расшифрованное сообщение.
         """
-        return pow(cipher, *pubkey)
+        return pow(message, *pubkey)
 
     @staticmethod
     def generate_message(pubkey: (int, int)) -> int:
         """Генерирует сообщение для аутентификации по открытому ключу pubkey"""
-        return common.random_prime(pubkey[1])
+        return random_prime(pubkey[1])
 
 
 class RsaSignature(RsaPlain):
@@ -177,14 +178,17 @@ def main():
 
     pubkey = rsa_1.get_pubkey()
 
-    challenge_1 = rsa_client.generate_message(pubkey)
-    challenge_2 = rsa_client.generate_message(pubkey)
+    msg_1 = rsa_client.generate_message(pubkey)
+    challenge_1 = rsa_client.encrypt(msg_1, pubkey)
 
-    response_1 = rsa_1.encrypt(challenge_1)
-    response_2 = rsa_2.encrypt(challenge_2)
+    msg_2 = rsa_client.generate_message(pubkey)
+    challenge_2 = rsa_client.encrypt(msg_2, pubkey)
 
-    original_1 = rsa_client.decrypt(response_1, pubkey) == challenge_1
-    original_2 = rsa_client.decrypt(response_2, pubkey) == challenge_2
+    response_1 = rsa_1.decrypt(challenge_1)
+    response_2 = rsa_2.decrypt(challenge_2)
+
+    original_1 = response_1 == msg_1
+    original_2 = response_2 == msg_2
 
     if original_1:
         print("Аутентификация пройдена успешно")
