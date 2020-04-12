@@ -49,7 +49,7 @@ class Window(QtWidgets.QMainWindow):
                               self.ui.lineEdit_center_5)
 
         self.ui.label_welcome.setText(
-            f"Введите секрет (целое число) меньшее {MODULO}"
+            f"Введите секрет (целое число меньшее {MODULO})"
         )
         self.ui.label_out.setText(
             """Ключи расшифрования (любые три разных)"""
