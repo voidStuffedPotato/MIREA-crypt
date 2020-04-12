@@ -97,9 +97,10 @@ class RsaSignature(RsaPlain):
         Аргументы:
             msg: строка байт, заменяющая сообщение.
         """
-        self._msg = msg
-        self._hash.update(msg)
-        self._sign()
+        if self._msg != msg:
+            self._msg = msg
+            self._hash.update(msg)
+            self._sign()
 
     def _sign(self) -> None:
         """Обновляет состояние подписи после изменения сообщения."""
