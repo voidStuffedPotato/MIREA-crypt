@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 """Содержит класс цифровой подписи и протокола аутентификации на основе алгоритма RSA.
 
-  Пример использования:
+  Примеры использования:
 
   msg = b'My secret message'
   rsa_sig = RsaSignature()
@@ -15,12 +15,17 @@
 
   rsa_1 = RsaPlain()
   rsa_2 = RsaPlain()
+
   rsa_client = RsaPlain()
 
   pubkey = rsa_1.get_pubkey()
 
-  original_2 = rsa_client.prove_identity(rsa_2, pubkey)
-  (False)
+  challenge_2 = rsa_client.generate_message(pubkey)
+
+  response_2 = rsa_2.encrypt(challenge_2)
+
+  original_2 = rsa_client.decrypt(response_2, pubkey) == challenge_2
+  (Flase)
 """
 
 import hashlib
@@ -62,25 +67,28 @@ class RsaPlain(object):
         """Возвращает message, зашифрованное закрытым ключом
 
         Для проверки идентичности необходимо использовать
-        RsaPlain.prove_identity() с возвращаемым значением.
+        RsaPlain.decrypt().
         """
         return pow(message, self._d, self._n)
 
+
     @staticmethod
-    def prove_identity(target: "RsaPlain", pubkey: (int, int)) -> bool:
+    def decrypt(cipher: int, pubkey: (int, int)) -> bool:
         """Проверяет идентичность собеседника.
 
         Параметры:
-            target: собеседник класса RsaPlain.
+            cipher: шифротекст, зашифрованный закрытым ключом.
             pubkey: открытый ключ для проверки идентичности.
 
         Возвращает:
-            True, если собеседник идентичен заявленному, иначе False.
+            Расшифрованное сообщение.
         """
-        # 0 < msg < pubkey[1]
-        msg = common.random_prime(pubkey[1])
-        cipher = target.encrypt(msg)
-        return msg == pow(cipher, *pubkey)
+        return pow(cipher, *pubkey)
+
+    @staticmethod
+    def generate_message(pubkey: (int, int)) -> int:
+        """Генерирует сообщение для аутентификации по открытому ключу pubkey"""
+        return common.random_prime(pubkey[1])
 
 
 class RsaSignature(RsaPlain):
@@ -168,8 +176,15 @@ def main():
     rsa_client = RsaPlain()
 
     pubkey = rsa_1.get_pubkey()
-    original_1 = rsa_client.prove_identity(rsa_1, pubkey)
-    original_2 = rsa_client.prove_identity(rsa_2, pubkey)
+
+    challenge_1 = rsa_client.generate_message(pubkey)
+    challenge_2 = rsa_client.generate_message(pubkey)
+
+    response_1 = rsa_1.encrypt(challenge_1)
+    response_2 = rsa_2.encrypt(challenge_2)
+
+    original_1 = rsa_client.decrypt(response_1, pubkey) == challenge_1
+    original_2 = rsa_client.decrypt(response_2, pubkey) == challenge_2
 
     if original_1:
         print("Аутентификация пройдена успешно")
