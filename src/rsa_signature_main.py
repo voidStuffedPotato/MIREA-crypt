@@ -4,10 +4,6 @@ from lib.rsa_signature_ui import Ui_mainWindow
 from lib.common import random_prime
 from PyQt5 import QtWidgets, QtGui, QtCore
 
-K = 3
-N = 5
-MODULO = random_prime(2 ** 16)
-
 
 def parse_ints(target: str) -> (int, int):
     args = target.split()
