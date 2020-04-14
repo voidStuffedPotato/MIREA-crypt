@@ -3,8 +3,8 @@ import sys
 from PyQt5 import QtWidgets
 
 from lib import shamir
-from lib.shamir_ui import Ui_mainWindow
 from lib.common import random_prime
+from ui.shamir_ui import Ui_mainWindow
 
 K = 3
 N = 5

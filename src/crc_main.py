@@ -3,7 +3,7 @@ import sys
 from PyQt5 import QtWidgets
 
 from lib import crc
-from lib.crc_ui import Ui_mainWindow
+from ui.crc_ui import Ui_mainWindow
 
 CRC_32_POLYNOMIAL = 0x04C11DB7
 
