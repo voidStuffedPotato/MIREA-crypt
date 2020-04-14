@@ -12,7 +12,7 @@
 
 """
 
-from common import CryptError
+from .common import CryptError
 
 
 def _modulo(a: int, b: int):

@@ -30,7 +30,7 @@
 """
 
 import hashlib
-from common import random_prime
+from .common import random_prime
 
 
 class RsaPlain(object):

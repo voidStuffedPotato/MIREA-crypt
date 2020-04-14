@@ -1,8 +1,9 @@
 import sys
+
+from PyQt5 import QtWidgets
+
 from lib import rsa
 from lib.rsa_signature_ui import Ui_mainWindow
-from lib.common import random_prime
-from PyQt5 import QtWidgets, QtGui, QtCore
 
 
 def parse_ints(target: str) -> (int, int):

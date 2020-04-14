@@ -12,7 +12,7 @@
 """
 
 from functools import wraps
-from common import is_prime
+from .common import is_prime
 import random
 
 

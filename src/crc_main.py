@@ -1,7 +1,9 @@
 import sys
+
+from PyQt5 import QtWidgets
+
 from lib import crc
 from lib.crc_ui import Ui_mainWindow
-from PyQt5 import QtWidgets, QtGui, QtCore
 
 CRC_32_POLYNOMIAL = 0x04C11DB7
 
@@ -47,7 +49,6 @@ class Window(QtWidgets.QMainWindow):
             return
 
         self.ui.lineEdit_deciphered.setText(str(deciphered))
-
 
 
 app = QtWidgets.QApplication([])
